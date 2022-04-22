@@ -1,0 +1,49 @@
+version: "3.4"
+
+services:
+    php:
+        container_name: "php-fpm"
+        build:
+            context: ./php
+        image: php-fpm
+        environment:
+            - APP_ENV=${APP_ENV}
+        volumes:
+            - ${APP_FOLDER}:/var/www
+        ports:
+            - "9000:9000"
+        tty: true
+    nginx:
+        container_name: "nginx"
+        build:
+            context: ./nginx
+        image: nginx
+        volumes:
+            - ${APP_FOLDER}:/var/www
+            - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+            - ./logs:/var/log
+        depends_on:
+            - php
+        ports:
+            - "80:80"
+    node:
+        container_name: "node"
+        build:
+            context: ./node
+        image: node
+        volumes:
+            - ${APP_FOLDER}:/var/www
+        ports:
+            - "4000:4000"
+    database:
+        image: 'postgres:alpine'
+        environment:
+            POSTGRES_PASSWORD: main
+            POSTGRES_USER: main
+            POSTGRES_DB: main
+        ports:
+            - '5432:5432'
+        volumes:
+            - db-data:/var/lib/postgresql/data:rw
+volumes:
+    db-data:
