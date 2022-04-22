@@ -12,6 +12,10 @@ services:
             - ${APP_FOLDER}:/var/www
         ports:
             - "9000:9000"
+        links:
+            - database:db
+        depends_on:
+            - database
         tty: true
     nginx:
         container_name: "nginx"
@@ -36,6 +40,7 @@ services:
         ports:
             - "4000:4000"
     database:
+        container_name: "database"
         image: 'postgres:alpine'
         environment:
             POSTGRES_PASSWORD: main

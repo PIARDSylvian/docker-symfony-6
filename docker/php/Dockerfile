@@ -7,7 +7,7 @@ FROM php:fpm-alpine3.14
 
 # for pgsql
 RUN apk --update --no-cache add git postgresql-dev
-RUN docker-php-ext-install pdo pdo_pgsql
+RUN docker-php-ext-install pdo pdo_pgsql intl
 
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www
